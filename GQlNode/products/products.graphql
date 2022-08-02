@@ -1,5 +1,9 @@
 type Query {
   products: [Product]
+  """
+  here we have created a pramaterised Query or Query which can accpet arguments
+  """
+  productsByPrice(min: Float!, max: Float!): [Product]
 }
 
 type Product {
