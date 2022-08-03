@@ -1,23 +1,26 @@
 // making imports
 const express = require("express");
 const path = require("path");
+
 // buildschema allows us to create schema using graphql schema language
 // buildschema function is used when we want to make schema with build schema function
 // const { buildSchema } = require("graphql");
 
-// to meke express respond to graphql queries
+// to make express respond to graphql queries
+// it is used as a middleware
 const { graphqlHTTP } = require("express-graphql");
 
-// it is used to replace buildSchema function
+// makeExecutableSchema is used to replace buildSchema function
 // first we need to install graphqltools Command: npm install @graphql-tools/schema
 const { makeExecutableSchema } = require("@graphql-tools/schema");
 
-// loadfilessync function is used to read .graphql files and pass the text to typedefs in makeexecutable schema
+// loadfilessync function is used to read .graphql  files and other files too and pass the text to typedefs in makeexecutable schema
 // first we need to install graphqltools Command: npm install @graphql-tools/load-files
 const { loadFilesSync } = require("@graphql-tools/load-files");
 
 const app = express();
-// it is used to make query and query will include description and price of product
+
+// buildschema is used to make query and query will include description and price of product
 // here we are creating schema for a product
 // "!" means the field is required
 
@@ -54,12 +57,15 @@ const app = express();
 const typesArray = loadFilesSync(path.join(__dirname, "**/*.graphql"));
 // storing resolvers in variable
 const resolverArray = loadFilesSync(path.join(__dirname, "**/*.resolver.js"));
+
 // makeexecutableschema is a function used by grphql tools to build schema
 const schema = makeExecutableSchema({
   // typeDefs is the way grapql tools call schema
   typeDefs: typesArray,
   //   resolvers are used to respond to queries
+  // after use of resolver
   resolvers: resolverArray,
+  // before use of resolver
   // Query: {
   //   products: async (parents, args, context, info) => {
   //     // now the data will pass through resolver
@@ -74,7 +80,7 @@ const schema = makeExecutableSchema({
   //   },
   // },
 });
-    
+
 // values that are going to be used in the query
 const root = {
   // after
@@ -131,6 +137,7 @@ const root = {
 };
 
 app.use(
+  // route
   "/graphql",
   graphqlHTTP({
     // it is the schema that we created above

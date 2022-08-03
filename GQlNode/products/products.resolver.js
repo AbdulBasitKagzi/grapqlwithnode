@@ -1,4 +1,9 @@
-const { getProducts, getproductsByPrice } = require("./product.model");
+const {
+  getProducts,
+  getproductsByPrice,
+  addNewProduct,
+  addNewReview,
+} = require("./product.model");
 module.exports = {
   Query: {
     products: () => {
@@ -8,6 +13,15 @@ module.exports = {
     // here we have replace argument called parent by "_"
     productsByPrice: (_, args) => {
       return getproductsByPrice(args.min, args.max);
+    },
+  },
+  // adding a reslover for mutation
+  Mutation: {
+    addNewProduct: (_, args) => {
+      return addNewProduct(args.id, args.description, args.price);
+    },
+    addNewReview: (_, args) => {
+      return addNewReview(args.id, args.rating, args.comment);
     },
   },
 };
